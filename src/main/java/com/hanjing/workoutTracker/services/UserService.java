@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 
-public class UserService {
+public class UserService { //userdetails
     private final UserRepository userRepository;
 
     @Bean
