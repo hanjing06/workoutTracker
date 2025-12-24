@@ -2,6 +2,7 @@ package com.hanjing.workoutTracker.config;
 
 import com.hanjing.workoutTracker.filters.JWTAuthenticationFilter;
 
+import com.hanjing.workoutTracker.services.UserInfoServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,11 +30,13 @@ import org.springframework.stereotype.Component;
 public class SecurityConfig {
 
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
-    private final UserService userService; //authentication
+    private final UserDetailsService userDetailsService; //authentication
+    private final AuthenticationProvider authenticationProvider;
 
-    public SecurityConfig(JWTAuthenticationFilter jwtAuthenticationFilter, UserService userService){
+    public SecurityConfig(JWTAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService, AuthenticationProvider authenticationProvider){
         this.jwtAuthenticationFilter=jwtAuthenticationFilter;
-        this.userService=userService;
+        this.userDetailsService=userDetailsService;
+        this.authenticationProvider = authenticationProvider;
     }
 
     @Bean
@@ -41,10 +45,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userService.userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
 
     @Bean
@@ -65,7 +69,7 @@ public class SecurityConfig {
 
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Stateless session
 
-                .authenticationProvider(authenticationProvider()) //set custon authentication provider
+                .authenticationProvider(authenticationProvider) //set custon authentication provider
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); //defines what its base functionality is
 
         return http.build();
