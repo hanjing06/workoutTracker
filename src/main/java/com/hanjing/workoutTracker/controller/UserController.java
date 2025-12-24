@@ -1,7 +1,6 @@
 package com.hanjing.workoutTracker.controller; //controllers handle signup/login requests and authorized requests
 
 import com.hanjing.workoutTracker.services.JWTService;
-import com.hanjing.workoutTracker.services.UserService;
 import com.hanjing.workoutTracker.models.AuthRequest;
 import com.hanjing.workoutTracker.models.User;
 

@@ -1,7 +1,6 @@
 package com.hanjing.workoutTracker.config;
 
 import com.hanjing.workoutTracker.filters.JWTAuthenticationFilter;
-import com.hanjing.workoutTracker.services.UserService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

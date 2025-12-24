@@ -11,58 +11,18 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString
-@Table(name = "users")
 
-public class User implements UserDetails {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String firstName;
-    String lastName;
-
-    @Column(unique = true)
-    String email;
-    String password;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
-
-    @Enumerated(EnumType.STRING)
-    Role role;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(){
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getUsername(){
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired(){
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked(){
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired(){
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled(){
-        return true;
-    }
+    private Long id;
+    private String name;
+    private String email;
+    private String password;
+    private String roles;
 
 }
