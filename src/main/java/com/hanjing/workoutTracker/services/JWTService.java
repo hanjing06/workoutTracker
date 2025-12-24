@@ -30,7 +30,7 @@ public class JWTService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(String userDetails) {
         return createToken(new HashMap<>(), userDetails);
     }
 

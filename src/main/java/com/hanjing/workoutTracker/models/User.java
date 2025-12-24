@@ -25,4 +25,6 @@ public class User{
     private String password;
     private String roles;
 
+    public User(String email, String password, String roles) {
+    }
 }

@@ -4,6 +4,7 @@ import com.hanjing.workoutTracker.services.JWTService;
 import com.hanjing.workoutTracker.models.AuthRequest;
 import com.hanjing.workoutTracker.models.User;
 
+import com.hanjing.workoutTracker.services.UserInfoServices;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 public class UserController {
 
-    private UserService service;
+    private UserInfoServices service;
 
     private JWTService jwtService;
 
