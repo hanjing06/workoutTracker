@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +34,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public JWTAuthenticationFilter(UserDetailsService userDetailsService, JWTService jwtService){
+    public JWTAuthenticationFilter(@Lazy UserDetailsService userDetailsService, JWTService jwtService){
         this.userDetailsService = userDetailsService;
         this.jwtService = jwtService;
     }

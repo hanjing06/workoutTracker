@@ -44,10 +44,10 @@ public class JWTService {
         return claimsResolvers.apply(claims);
     }
 
-    private String createToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    private String createToken(Map<String, Object> extraClaims, String userDetails) {
         return Jwts.builder()
                     .setClaims(extraClaims)
-                    .setSubject(userDetails.getUsername())
+                    .setSubject(userDetails)
                     .setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                     .signWith(getSigningKey(), SignatureAlgorithm.HS256)

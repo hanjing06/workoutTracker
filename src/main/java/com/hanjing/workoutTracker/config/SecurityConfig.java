@@ -1,11 +1,8 @@
 package com.hanjing.workoutTracker.config;
 
 import com.hanjing.workoutTracker.filters.JWTAuthenticationFilter;
-
-import com.hanjing.workoutTracker.services.UserInfoServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,64 +12,50 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import org.springframework.stereotype.Component;
-
 @Configuration
-@Component
 @EnableWebSecurity
 @EnableMethodSecurity
 
 public class SecurityConfig {
 
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
-    private final UserDetailsService userDetailsService; //authentication
-    private final AuthenticationProvider authenticationProvider;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(JWTAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService, AuthenticationProvider authenticationProvider){
-        this.jwtAuthenticationFilter=jwtAuthenticationFilter;
-        this.userDetailsService=userDetailsService;
-        this.authenticationProvider = authenticationProvider;
+    public SecurityConfig(JWTAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){ //uses bcrypt hashing (password storage)
-        return new BCryptPasswordEncoder();
+    public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception{
-                return config.getAuthenticationManager();
-    }
-
-    //security filter chain: respoinsible to define available endpoints
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authProvider) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken").permitAll() //public endpoints
-                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER") //user endpoint
-                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN") //admin endpoint
-                        .anyRequest().authenticated()) //all other endpoints will require authentication
-
-                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Stateless session
-
-                .authenticationProvider(authenticationProvider) //set custon authentication provider
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); //defines what its base functionality is
+                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken").permitAll()
+                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Pass the authProvider bean here
+                .authenticationProvider(authProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 }

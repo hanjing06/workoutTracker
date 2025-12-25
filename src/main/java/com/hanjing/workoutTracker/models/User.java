@@ -11,9 +11,12 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "user")
 
 public class User{
 
@@ -21,10 +24,10 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String email;
     private String password;
     private String roles;
 
-    public User(String email, String password, String roles) {
-    }
+    @Column(unique = true)
+    private String email;
+
 }
