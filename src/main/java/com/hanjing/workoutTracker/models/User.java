@@ -1,12 +1,12 @@
 package com.hanjing.workoutTracker.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user")
@@ -22,21 +22,5 @@ public class User {
 
     @Column(unique = true)
     private String email;
-
-    public String getEmail(){
-        return email;
-    }
-
-    public String getPassword(){
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRoles(){
-        return roles;
-    }
 
 }
