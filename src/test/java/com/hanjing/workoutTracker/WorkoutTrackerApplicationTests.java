@@ -9,5 +9,4 @@ class WorkoutTrackerApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
