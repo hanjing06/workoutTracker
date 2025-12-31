@@ -2,6 +2,7 @@ package com.hanjing.workoutTracker.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Data
