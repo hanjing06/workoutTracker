@@ -2,7 +2,6 @@ package com.hanjing.workoutTracker.services;
 
 import com.hanjing.workoutTracker.models.User;
 import com.hanjing.workoutTracker.repositories.UserRepository;
-import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

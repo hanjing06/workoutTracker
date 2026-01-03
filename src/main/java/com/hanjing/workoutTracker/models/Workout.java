@@ -1,13 +1,15 @@
 package com.hanjing.workoutTracker.models;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedBy;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 public class Workout {
 
@@ -19,9 +21,10 @@ public class Workout {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String name;
-    private String muscle_group;
-    private String cardio;
+    private String title;
+    private String exerciseName;
+    private String muscleGroup;
+    private String type;
     private int reps;
     private int sets;
     private double weights;
